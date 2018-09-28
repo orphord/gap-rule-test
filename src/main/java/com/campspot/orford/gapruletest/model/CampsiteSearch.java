@@ -2,19 +2,18 @@ package com.campspot.orford.gapruletest.model;
 
 import java.time.LocalDate;
 
+import com.campspot.orford.gapruletest.util.CampsiteSearchDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.campspot.orford.gapruletest.util.ReservationDeserializer;
 
-@JsonDeserialize(using = ReservationDeserializer.class)
-public class Reservation {
+@JsonDeserialize(using = CampsiteSearchDeserializer.class)
+public class CampsiteSearch {
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private Integer campsiteID;
 	/**
 	 * @return the startDate
 	 */
 	public LocalDate getStartDate() {
-		return startDate;
+		return this.startDate;
 	}
 	/**
 	 * @param _startDate the startDate to set
@@ -33,18 +32,6 @@ public class Reservation {
 	 */
 	public void setEndDate(LocalDate _endDate) {
 		this.endDate = _endDate;
-	}
-	/**
-	 * @return the campsiteID
-	 */
-	public Integer getCampsiteID() {
-		return this.campsiteID;
-	}
-	/**
-	 * @param _campsiteID the campsiteID to set
-	 */
-	public void setCampsiteID(Integer _campsiteID) {
-		this.campsiteID = _campsiteID;
 	}
 	
 	

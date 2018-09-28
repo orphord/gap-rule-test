@@ -34,27 +34,28 @@ public class GapRuleTestApplication implements ApplicationRunner {
 		log.info("Main() called.");
 		SpringApplication.run(GapRuleTestApplication.class, args);
 	}
-	
+
+	/**
+	 * Override for ApplicationRunner implementation.  Used to conveniently handle file-based Json
+	 * data. 
+	 */
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		log.info("Run() function called.");
 
 		Map<String, Object> cmdLineArgs = parseCmdLineArgs(args);
-		
+
 		fileDataController.loadData((Integer)cmdLineArgs.get(GAP_DAYS_CMD_LINE_ARG),
 																(String)cmdLineArgs.get(FILE_CMD_LINE_ARG));
-		
-		ClassPathResource jsonCPresource = new ClassPathResource("test-case.json");
-		log.info("Length of json file: " + jsonCPresource.contentLength());
-		InputStream isStream = jsonCPresource.getInputStream();
-		JsonNode rootNode = new ObjectMapper().readTree(isStream);
-		
-		JsonNode searchNode = rootNode.get("search");
-		log.info("search: " + (searchNode == null));
-		log.info("startDate: " + searchNode.get("startDate").asText());
-		
+
 	}
 	
+	/**
+	 * Function to parse command line args and create a Map of them for simpler processing.
+	 * 
+	 * @param _args
+	 * @return
+	 */
 	private Map<String, Object> parseCmdLineArgs(ApplicationArguments _args) {
 		// Initialize map to nulls for each potential command line arg
 		Map<String, Object> argsMap = new HashMap<String, Object>();

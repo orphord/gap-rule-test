@@ -14,18 +14,15 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.io.ClassPathResource;
 
 import com.campspot.orford.gapruletest.controller.FileDataController;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @SpringBootApplication
 public class GapRuleTestApplication implements ApplicationRunner {
 	private final static Logger log = LoggerFactory.getLogger(GapRuleTestApplication.class);
 	
 	public final static String FILE_CMD_LINE_ARG = "file.loc";
-	public final static String GAP_DAYS_CMD_LINE_ARG = "default.gap";
 	
 	@Autowired
 	FileDataController fileDataController;
@@ -45,8 +42,9 @@ public class GapRuleTestApplication implements ApplicationRunner {
 
 		Map<String, Object> cmdLineArgs = parseCmdLineArgs(args);
 
-		fileDataController.loadData((Integer)cmdLineArgs.get(GAP_DAYS_CMD_LINE_ARG),
-																(String)cmdLineArgs.get(FILE_CMD_LINE_ARG));
+		fileDataController.loadData((String)cmdLineArgs.get(FILE_CMD_LINE_ARG));
+		log.info("About to call perforSearch()");
+		fileDataController.performSearch();
 
 	}
 	
@@ -60,7 +58,6 @@ public class GapRuleTestApplication implements ApplicationRunner {
 		// Initialize map to nulls for each potential command line arg
 		Map<String, Object> argsMap = new HashMap<String, Object>();
 		argsMap.put(FILE_CMD_LINE_ARG, null);
-		argsMap.put(GAP_DAYS_CMD_LINE_ARG, null);
 
 		// Set filePath if exists
 		List<String> filePathArgList = _args.getOptionValues(FILE_CMD_LINE_ARG);
@@ -68,14 +65,6 @@ public class GapRuleTestApplication implements ApplicationRunner {
 			argsMap.put(FILE_CMD_LINE_ARG, filePathArgList.get(0));
 		}
 
-		// Set gap value if exists
-		List<String> gapArgStrList = _args.getOptionValues(GAP_DAYS_CMD_LINE_ARG);
-		if(gapArgStrList != null && !gapArgStrList.isEmpty()) {
-			String gapStr = gapArgStrList.get(0);
-			Integer gapDays = Integer.valueOf(gapStr);
-			argsMap.put(GAP_DAYS_CMD_LINE_ARG, gapDays);
-		}
-	
 		return argsMap;
 	}
 }

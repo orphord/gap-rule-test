@@ -4,12 +4,16 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
 import com.campspot.orford.gapruletest.exception.GapRuleException;
 import com.campspot.orford.gapruletest.model.Campsite;
 import com.campspot.orford.gapruletest.model.Reservation;
+import com.campspot.orford.gapruletest.service.CampsiteSearchService;
+import com.campspot.orford.gapruletest.service.CampsiteService;
+import com.campspot.orford.gapruletest.service.ReservationService;
 import com.campspot.orford.gapruletest.model.CampsiteSearch;
 import com.campspot.orford.gapruletest.util.DataObjectsFromFileUtil;
 
@@ -18,8 +22,14 @@ import com.campspot.orford.gapruletest.util.DataObjectsFromFileUtil;
 public class FileDataController {
 	private static Logger log = LoggerFactory.getLogger(FileDataController.class);
 
-	@Value("${default.gap.days:1}")
-	private Integer gapDays;
+	@Autowired
+	ReservationService resService;
+	@Autowired
+	CampsiteService siteService;
+	@Autowired
+	CampsiteSearchService searchService;
+	
+	CampsiteSearch searchRequest;
 
 	/**
 	 * loadData function gets optional parameters _optGapDays and _optFilePath parameters
@@ -31,12 +41,22 @@ public class FileDataController {
 	 * @param _optFilePath - path on the local filesystem to a json file
 	 *	(*assumed to be valid for this request*)
 	 */
-	public void loadData(Integer _optGapDays, String _optFilePath) {
+	public void loadData(String _optFilePath) {
+		log.info("File path passed in: " + _optFilePath);
 		try {
+
+			// Acquire data from file and set to appropriate services
 			DataObjectsFromFileUtil dataFromFile = new DataObjectsFromFileUtil();
 			List<Reservation> reservationList = dataFromFile.getReservationListFromFile(_optFilePath);
 			List<Campsite> campsiteList = dataFromFile.getCampsiteListFromFile(_optFilePath);
-			CampsiteSearch search = dataFromFile.getSearchFromFile(_optFilePath);
+			searchRequest = dataFromFile.getSearchFromFile(_optFilePath);
+
+			resService.setAllReservations(reservationList);
+			siteService.setAllCampsites(campsiteList);
+			
+			// Call CampsiteSearchService initialize procedure to process data for search
+			searchService.initialize();
+			
 
 		} catch(GapRuleException ex) {
 			log.error("-------------------------------");
@@ -46,19 +66,10 @@ public class FileDataController {
 		}
 	}
 
-	/**
-	 * @return the gapDays
-	 */
-	public Integer getGapDays() {
-		return this.gapDays;
+	public void performSearch() {
+		log.info("performSearch() called");
+		searchService.performSearch(searchRequest);
+		
 	}
 
-	/**
-	 * @param _gapDays the gapDays to set
-	 */
-	public void setGapDays(Integer _gapDays) {
-		this.gapDays = _gapDays;
-	}
-	
-	
 }

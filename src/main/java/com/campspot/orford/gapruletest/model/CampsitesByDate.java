@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CampsitesByDate implements Map<LocalDate, Set<Integer>> {
 	private final static Logger log = LoggerFactory.getLogger(CampsitesByDate.class);
-	
+
 	private Map<LocalDate, Set<Integer>> mapCampsitesByDate;
 	
 	public CampsitesByDate() {
@@ -78,7 +79,17 @@ public class CampsitesByDate implements Map<LocalDate, Set<Integer>> {
 	public Collection<Set<Integer>> values() {
 		return mapCampsitesByDate.values();
 	}
-	
+
+
+	public void initialize(List<LocalDate> _datesOfInterest, Set<Integer> _campsiteIDs) {
+		log.info("initialize() CampsitesByDate object.");
+
+		for(LocalDate date : _datesOfInterest) {
+			mapCampsitesByDate.put(date, _campsiteIDs.stream().collect(Collectors.toSet()));
+		}
+	}
+
+
 	/**
 	 * Proc to remove the campsite ID associated with _res from all dates represented in _datesToRemove.
 	 *

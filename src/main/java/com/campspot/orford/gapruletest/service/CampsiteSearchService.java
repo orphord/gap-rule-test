@@ -15,16 +15,16 @@ public class CampsiteSearchService {
 	private final static Logger log = LoggerFactory.getLogger(CampsiteSearchService.class);
 	
 	@Autowired
-	CampsitesSearchByDateService campsitesByDate;
+	CampsitesSearchByDateService campsitesByDateService;
 	
 	public void initialize() {
-		campsitesByDate.mungeReservationData();
+		campsitesByDateService.mungeReservationData();
 	}
 
 	public List<Campsite> performSearch(CampsiteSearch _search) {
 		log.info("performSearch() called in service.");
-		
-		log.info("What is that latest unaccpt date in teh current reservations? " + campsitesByDate.getLatestUnacceptDate());
+		List<Integer> availableSitesByDate = campsitesByDateService.performSearch(_search);
+
 		return null;
 	}
 

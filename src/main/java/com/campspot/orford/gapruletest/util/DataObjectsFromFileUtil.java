@@ -141,7 +141,7 @@ public class DataObjectsFromFileUtil {
 		ClassPathResource jsonCPresource = new ClassPathResource("test-case.json");
 		InputStream jsonIS = null;
 
-		log.info("Json file from property: " + testJsonFileLoc);
+		log.debug("Json file from property: " + testJsonFileLoc);
 		jsonIS = jsonCPresource.getInputStream();
 	
 		return jsonIS;

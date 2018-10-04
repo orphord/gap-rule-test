@@ -19,7 +19,7 @@ public class JsonNodeToObjectUtil {
 	private static Logger log = LoggerFactory.getLogger(JsonNodeToObjectUtil.class);
 	
 	public List<Campsite> getCampsites(JsonNode _campsiteNode) throws GapRuleException {
-		log.info("getCampsites from JsonNode called.");
+		log.debug("getCampsites from JsonNode called.");
 		List<Campsite> campsites = new ArrayList<Campsite>();
 
 		try {
@@ -34,7 +34,7 @@ public class JsonNodeToObjectUtil {
 	}
 
 	public List<Reservation> getReservations(JsonNode _resNode) throws GapRuleException {
-		log.info("getReservations from JsonNode called.");
+		log.debug("getReservations from JsonNode called.");
 		List<Reservation> reservations = new ArrayList<Reservation>();
 
 		try {
@@ -50,7 +50,7 @@ public class JsonNodeToObjectUtil {
 	}
 
 	public CampsiteSearch getCampsiteSearch(JsonNode _searchNode) throws GapRuleException {
-		log.info("getCampsiteSearch from JsonNode called.");
+		log.debug("getCampsiteSearch from JsonNode called.");
 		CampsiteSearch searchObj = new CampsiteSearch();
 
 		try {

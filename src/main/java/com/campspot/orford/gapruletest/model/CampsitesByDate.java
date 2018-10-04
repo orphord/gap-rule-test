@@ -3,6 +3,7 @@ package com.campspot.orford.gapruletest.model;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +43,12 @@ public class CampsitesByDate implements Map<LocalDate, Set<Integer>> {
 
 	@Override
 	public Set<Integer> get(Object _key) {
-		return mapCampsitesByDate.get(_key);
+		// Handle key outside of range case by returning empty set
+		Set<Integer> outSet = mapCampsitesByDate.get(_key);
+		if(outSet == null) {
+			outSet = new HashSet<Integer>();
+		}
+		return outSet;
 	}
 
 	@Override
@@ -82,7 +88,7 @@ public class CampsitesByDate implements Map<LocalDate, Set<Integer>> {
 
 
 	public void initialize(List<LocalDate> _datesOfInterest, Set<Integer> _campsiteIDs) {
-		log.info("initialize() CampsitesByDate object.");
+		log.debug("initialize() CampsitesByDate object.");
 
 		for(LocalDate date : _datesOfInterest) {
 			mapCampsitesByDate.put(date, _campsiteIDs.stream().collect(Collectors.toSet()));

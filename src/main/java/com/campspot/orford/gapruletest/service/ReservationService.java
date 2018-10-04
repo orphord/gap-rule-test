@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import com.campspot.orford.gapruletest.model.Reservation;
 
 @Service
 public class ReservationService {
+	private final static Logger log = LoggerFactory.getLogger(ReservationService.class);
 
 	List<Reservation> allReservations = new LinkedList<Reservation>();
 	LocalDate latestUnacceptDate;
@@ -58,6 +61,7 @@ public class ReservationService {
 	 * @return LocalDate indicating the latest unacceptable date among this group of Reservations
 	 */
 	public LocalDate findLatestUnacceptDate(Integer _gapDays) {
+		log.debug("findLatestUnacceptDate() called.");
 		LocalDate latestUnaccept = LocalDate.MIN;
 		long gapDays = _gapDays.longValue();
 

@@ -42,7 +42,7 @@ public class FileDataController {
 	 *	(*assumed to be valid for this request*)
 	 */
 	public void loadData(String _optFilePath) {
-		log.info("File path passed in: " + _optFilePath);
+		log.debug("File path passed in: " + _optFilePath);
 		try {
 
 			// Acquire data from file and set to appropriate services
@@ -56,7 +56,6 @@ public class FileDataController {
 			
 			// Call CampsiteSearchService initialize procedure to process data for search
 			searchService.initialize();
-			
 
 		} catch(GapRuleException ex) {
 			log.error("-------------------------------");
@@ -68,8 +67,16 @@ public class FileDataController {
 
 	public void performSearch() {
 		log.info("performSearch() called");
-		searchService.performSearch(searchRequest);
-		
+		List<Campsite> availableSites = searchService.performSearch(searchRequest);
+		log.info("==============================================");
+		log.info("Search Criteria:");
+		log.info("\tStart Date: " + searchRequest.getStartDate());
+		log.info("\tEnd Date: " + searchRequest.getEndDate());
+		log.info("Sites Available for search criteria: ");
+		for(Campsite site : availableSites) {
+			log.info(site.getName());
+		}
+		log.info("==============================================");
 	}
 
 }

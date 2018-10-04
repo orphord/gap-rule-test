@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class CampsitesSearchByDateService {
 	}
 
 	public void mungeReservationData() {
-		log.info("mungeReservationData() function called.");
+		log.debug("mungeReservationData() function called.");
 
 		// Get List of Reservation objects and process it for use in searches
 		List<Reservation> reservations = resService.getAllReservations();
@@ -76,16 +77,36 @@ public class CampsitesSearchByDateService {
 
 
 	public List<Integer> performSearch(CampsiteSearch _search) {
-		LocalDate startDate = _search.getStartDate();
-		LocalDate endDate = _search.getEndDate();
+		LocalDate searchStartDate = _search.getStartDate();
+		LocalDate searchEndDate = _search.getEndDate();
 		
-		List<LocalDate> reservationDates = this.getDatesBetweenDates(startDate, endDate);
+		List<LocalDate> reservationDates = this.getDatesBetweenDates(searchStartDate, searchEndDate);
 
-		// Get set of Integer objects representing campsites that are acceptable with each date type 
-		Set<Integer> startDateCampsiteIDs = campsitesByAcceptableStartDate.get(startDate);
-		Set<Integer> endDateCampsiteIDs = campsitesByAcceptableEndDate.get(endDate);
+		// Get set of Integer objects representing campsites that are acceptable start date and enddate 
+		Set<Integer> startDateCampsiteIDs = campsitesByAcceptableStartDate.get(searchStartDate);
+		Set<Integer> endDateCampsiteIDs = campsitesByAcceptableEndDate.get(searchEndDate);
 		
-		return null;
+		// Now must be sure that every date within the reservation is checked to be sure search doesn't
+		// overlap existing reservation
+		Set<Integer> unreservedCampsiteIDs = campsitesByUnreservedDate.get(searchStartDate);
+		for(LocalDate date : reservationDates) {
+			Set<Integer> campsitesForThisDate = campsitesByUnreservedDate.get(date);
+			unreservedCampsiteIDs.retainAll(campsitesForThisDate);
+		}
+
+		// Find intersection of those campsites that meet search criteria
+		// all sites available on start date (taking gap into account)
+		// all sites available on end date (taking gap into account)
+		// all sites unreserved on each date of reservation
+		Set<Integer> availableCampsiteIDs = new HashSet<Integer>(startDateCampsiteIDs);
+		availableCampsiteIDs.retainAll(endDateCampsiteIDs);
+		availableCampsiteIDs.retainAll(unreservedCampsiteIDs);
+
+		// Handle case where startDate is after latest unaccept date --> all campsites are available
+		if(searchStartDate.isAfter(resService.getLatestUnacceptDate())) {
+			availableCampsiteIDs = siteService.getCampsiteIDs();
+		}
+		return new ArrayList<Integer>(availableCampsiteIDs);
 	}
 	
 	/**

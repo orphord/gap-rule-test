@@ -17,15 +17,19 @@ public class CampsiteSearchService {
 	@Autowired
 	CampsitesSearchByDateService campsitesByDateService;
 	
+	@Autowired
+	CampsiteService siteService;
+	
 	public void initialize() {
 		campsitesByDateService.mungeReservationData();
 	}
 
 	public List<Campsite> performSearch(CampsiteSearch _search) {
 		log.info("performSearch() called in service.");
-		List<Integer> availableSitesByDate = campsitesByDateService.performSearch(_search);
+		List<Integer> availableSiteIDsByDate = campsitesByDateService.performSearch(_search);
+		List<Campsite> availableSitesByDate = siteService.getCampsiteListFromIDs(availableSiteIDsByDate);
 
-		return null;
+		return availableSitesByDate;
 	}
 
 }

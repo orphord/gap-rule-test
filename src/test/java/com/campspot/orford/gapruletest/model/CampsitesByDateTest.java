@@ -5,12 +5,11 @@ import static org.junit.Assert.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -62,10 +61,6 @@ public class CampsitesByDateTest {
 		LocalDate latestUnaccept = testReservationLate.getEndDate().plusDays(gapDays + 1);
 		List<LocalDate> dates = this.datesBetweenDates(startDate, latestUnaccept);
 		testCbd.initialize(dates, csSvcMock.getCampsiteIDs());
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	@Test

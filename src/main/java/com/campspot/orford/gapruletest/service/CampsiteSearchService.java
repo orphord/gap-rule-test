@@ -15,7 +15,7 @@ public class CampsiteSearchService {
 	private final static Logger log = LoggerFactory.getLogger(CampsiteSearchService.class);
 	
 	@Autowired
-	CampsitesSearchByDateService campsitesByDateService;
+	CampsiteSearchByDateService campsitesByDateService;
 	
 	@Autowired
 	CampsiteService siteService;

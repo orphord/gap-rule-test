@@ -20,8 +20,8 @@ import com.campspot.orford.gapruletest.model.CampsitesByDate;
 import com.campspot.orford.gapruletest.model.Reservation;
 
 @Service
-public class CampsitesSearchByDateService {
-	private static final Logger log = LoggerFactory.getLogger(CampsitesSearchByDateService.class);
+public class CampsiteSearchByDateService {
+	private static final Logger log = LoggerFactory.getLogger(CampsiteSearchByDateService.class);
 
 	@Value("${default.start.date.str}")
 	String startDateStr;
@@ -41,7 +41,7 @@ public class CampsitesSearchByDateService {
 	
 	private final static long DAYS_TO_GAP = 2;
 
-	public CampsitesSearchByDateService() {
+	public CampsiteSearchByDateService() {
 		campsitesByUnreservedDate = new CampsitesByDate();
 		campsitesByAcceptableStartDate = new CampsitesByDate();
 		campsitesByAcceptableEndDate = new CampsitesByDate();

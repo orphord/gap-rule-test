@@ -1,17 +1,15 @@
-package com.campspot.orford.gapruletest;
+package com.campspot.orford.gapruletest.service;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
@@ -19,7 +17,7 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInA
 import com.campspot.orford.gapruletest.model.Campsite;
 import com.campspot.orford.gapruletest.service.CampsiteService;
 
-public class CampsitesByDateServiceTest {
+public class CampsiteSearchByDateServiceTest {
 	CampsiteService testService = new CampsiteService();
 	
 	List<Campsite> sites = new ArrayList<Campsite>();
@@ -56,8 +54,8 @@ public class CampsitesByDateServiceTest {
 		siteIDs.add(new Integer(3));
 
 		List<Campsite> sitesForIDs = testService.getCampsiteListFromIDs(siteIDs);
-		assertThat(sitesForIDs.size(), is(2));
-		assertThat(sitesForIDs.get(0).getId(), is(2));
+		assertThat(sitesForIDs.size(), is(equalTo(2)));
+		assertThat(sitesForIDs.get(0).getId(), is(equalTo(2)));
 
 	}
 

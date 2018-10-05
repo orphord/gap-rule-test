@@ -10,10 +10,10 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
    
 ### Instructions
    1. In a terminal window navigate to the directory to which you would like to clone the git repository type `git clone https://github.com/orphord/gap-rule-test.git` (<--or copy-paste this text).
-     * This will have created a directory called `gap-rule-test/`, navigate there (ie. `cd gap-rule-test/`) (please forgive that I added "test" at the end of the name, I'm thinking of this as a test, so I named the repo that.
+    * This will have created a directory called `gap-rule-test/`, navigate there (ie. `cd gap-rule-test/`) (please forgive that I added "test" at the end of the name, I'm thinking of this as a test, so I named the repo that.
    2. Type `mvn clean install`, the build will start and the set of tests will run, I would expect no failures, **If there is a failure, please call or get in touch, that would be surprising and I may need to check out what's up**.
    3. Type `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar`.  This will run this system with the `test-case.json` provided with the instructions.
-      * I added the feature to allow a user to specify a json file with the command line parameter --file.loc, so on my system for example I would enter `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar --file.loc=/home/orphord/dir/to/another-file.json` and that file would get picked up and processed.
+     * Note: I did add the feature to allow a user to specify a json file with the command line parameter --file.loc, so on my system for example I would enter `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar --file.loc=/home/orphord/dir/to/another-file.json` and that file would get picked up and processed.
    4. The essential output is to the console as log4j messages.  The important information is between "======================..." and "=================..."
 
 ---
@@ -27,6 +27,7 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
 In solving the gap issue, I started with the idea that there are *good* days and *bad* days, as I thought through it more I found the question of good or bad were not deep enough.  There is a difference between a good start day and a good end day, and just because a search's start and end days happen to be *good*, does **not** mean the reservation is acceptable.
 
 Here's an example:
+
 |Days->|Day 1|Day 2|Day 3|Day 4|Day 5|Day 6|Day 7|
 |---|---|---|---|---|---|---|---|
 |Reserved?|||res1|res1|res1|||

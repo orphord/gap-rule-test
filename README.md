@@ -1,5 +1,5 @@
 # gap-rule-test
-###Gap rule implementation for campspot hiring process
+### Gap rule implementation for campspot hiring process
 An implementation of the "Gap Rule" for Campspot where a new reservation may *not* be made leaving a gap of <gap> days.  In this implementation <gap> is 1 day, but it is implemented as a property in a text file, so this could be changed to *any* gap size with a restart of the system.
 
 ### Install/Build Instructions
@@ -18,12 +18,12 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
 
 ---
 
-###A few technical notes
+### A few technical notes
 1. In creating the data structures I decided to allow the Service layer to hold on to the Lists of campsites and reservations instead of making a pseudo-DAO layer which I felt would have made the code more confusing to read without adding any value.
 2. The *gap-rule* logic is in the `CampsitesByDateService.java` file.
 3. I'm assuming a good/valid JSON file, I definitely am serious about testing input, but felt that in the interest of time/clarity that would be overkill for this exercise.
 
-###Approach
+### Approach
 In solving the gap issue, I started with the idea that there are *good* days and *bad* days, as I thought through it more I found the question of good or bad were not deep enough.  There is a difference between a good start day and a good end day, and just because a search's start and end days happen to be *good*, does **not** mean the reservation is acceptable.
 
 Here's an example:

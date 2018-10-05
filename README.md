@@ -4,7 +4,7 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
 
 ### Install/Build Instructions
 #### Required software
-   * Java 8 -- on my system I have Java 10 installed, but bytecode is compiled and tested with Java 8.
+   * Java 8 -- on my system I have Java 10 installed, but bytecode is compiled and tested to Java 8.
    * Apache Maven v.3.5.2
    * git -- on my system I have version 2.17.1, I would *guess* it works with others, but don't know that as a fact
    

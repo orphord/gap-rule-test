@@ -16,16 +16,16 @@ public class ReservationService {
 	private final static Logger log = LoggerFactory.getLogger(ReservationService.class);
 
 	List<Reservation> allReservations = new LinkedList<Reservation>();
-	LocalDate latestUnacceptDate;
+	LocalDate latestUnacceptDate = LocalDate.MIN;
+	long gapDays = 1; // default gap to 1
 
 	/**
 	 * Function to add a single reservation, checking that it meets acceptability criteria.
 	 * 
 	 * @param _inRes
-	 * @return Reservation indicating that it was successfully added or null if not.
 	 */
-	public Reservation addReservation(Reservation _inRes) {
-		return null;
+	public void addReservation(Reservation _inRes) {
+		allReservations.add(_inRes);
 	}
 
 
@@ -54,6 +54,22 @@ public class ReservationService {
 
 
 	/**
+	 * @return the gapDays
+	 */
+	public long getGapDays() {
+		return this.gapDays;
+	}
+
+
+	/**
+	 * @param _gapDays the gapDays to set
+	 */
+	public void setGapDays(long _gapDays) {
+		this.gapDays = _gapDays;
+	}
+
+
+	/**
 	 * Loop through all Reservation objects passed in as param and find the latest unacceptable
 	 * date among them.
 	 * @param List<Reservation> -- list of reservations to be checked for latest unacceptable
@@ -62,16 +78,20 @@ public class ReservationService {
 	 */
 	public LocalDate findLatestUnacceptDate(Integer _gapDays) {
 		log.debug("findLatestUnacceptDate() called.");
-		LocalDate latestUnaccept = LocalDate.MIN;
-		long gapDays = _gapDays.longValue();
+		gapDays = _gapDays.longValue();
 
 		for(Reservation res : this.getAllReservations()) {
-			LocalDate resLatestUnacceptDay = res.getEndDate().plusDays(gapDays + 1);
-			if(resLatestUnacceptDay.isAfter(latestUnaccept) ) {
-				latestUnaccept = resLatestUnacceptDay;
-			}
+			LocalDate resLatestUnacceptDate = res.getEndDate().plusDays(this.getGapDays() + 1);
+			this.updateLatestUnaccept(resLatestUnacceptDate);
 		}
 		
-		return latestUnaccept;
+		return this.latestUnacceptDate;
+	}
+	
+	public LocalDate updateLatestUnaccept(LocalDate _dateToCheck) {
+		if(_dateToCheck.isAfter(this.latestUnacceptDate) ) {
+			this.latestUnacceptDate = _dateToCheck;
+		}
+		return this.latestUnacceptDate;
 	}
 }

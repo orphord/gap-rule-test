@@ -76,5 +76,6 @@ The basic approach to the solution is to map a set of campsites to days which ar
 
 #### Next Steps:
 * If I were to implement this as a more production-like microservice two key changes would be
- 1. A RestController to replace the FileDataController -- in this example, the fact that the search and model data were combined into a single file made the idea of a FileDataController of some sort necessary.  I took advantage of this to allow the ability to pass in a data file as a command line parameter, but in a RestController would be the way to go in a production application.
- 2. A DAO layer -- behind the ReservationService and CampsiteService would be a data access layer which would directly make calls to the appropriate data store(s) to acquire the data as opposed to pulling it from a file.
+  1. A RestController to replace the FileDataController -- in this example, the fact that the search and model data were combined into a single file made the idea of a FileDataController of some sort necessary.  I took advantage of this to allow the ability to pass in a data file as a command line parameter, but in a RestController would be the way to go in a production application.
+  2. A DAO layer -- behind the ReservationService and CampsiteService would be a data access layer which would directly make calls to the appropriate data store(s) to acquire the data as opposed to pulling it from a file.
+* With these changes appropriate test cases would be developed to ensure the new functionality worked as we hope.

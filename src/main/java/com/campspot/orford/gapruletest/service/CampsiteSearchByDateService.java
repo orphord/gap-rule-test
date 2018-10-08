@@ -25,6 +25,7 @@ public class CampsiteSearchByDateService {
 
 	@Value("${default.start.date.str}")
 	String startDateStr;
+	LocalDate startDate;
 
 	@Value("${default.gap.days:1}")
 	private Integer gapDays;
@@ -79,13 +80,26 @@ public class CampsiteSearchByDateService {
 	public List<Integer> performSearch(CampsiteSearch _search) {
 		LocalDate searchStartDate = _search.getStartDate();
 		LocalDate searchEndDate = _search.getEndDate();
+
+		// Handle case where startDate is after latest unaccept date --> all campsites are available
+		if(searchStartDate.isAfter(resService.getLatestUnacceptDate())) {
+			return new ArrayList<Integer>(siteService.getCampsiteIDs());
+		}
 		
+		// At this point in the business process do not search past latest unaccept date
+		// If search dates are outside of range of acceptable dates, all campsites are available
+		LocalDate latestUnacceptDate = resService.getLatestUnacceptDate();
+		if(searchEndDate.isAfter(latestUnacceptDate)) {
+			searchEndDate = latestUnacceptDate;
+		}
+
+		// Get a list of LocalDate objects representing each date between the search start and search end inclusive
 		List<LocalDate> reservationDates = this.getDatesBetweenDates(searchStartDate, searchEndDate);
 
-		// Get set of Integer objects representing campsites that are acceptable start date and enddate 
+		// Get set of Integer objects representing campsites that are acceptable start date and enddate
 		Set<Integer> startDateCampsiteIDs = campsitesByAcceptableStartDate.get(searchStartDate);
 		Set<Integer> endDateCampsiteIDs = campsitesByAcceptableEndDate.get(searchEndDate);
-		
+
 		// Now must be sure that every date within the reservation is checked to be sure search doesn't
 		// overlap existing reservation
 		Set<Integer> unreservedCampsiteIDs = campsitesByUnreservedDate.get(searchStartDate);
@@ -102,10 +116,7 @@ public class CampsiteSearchByDateService {
 		availableCampsiteIDs.retainAll(endDateCampsiteIDs);
 		availableCampsiteIDs.retainAll(unreservedCampsiteIDs);
 
-		// Handle case where startDate is after latest unaccept date --> all campsites are available
-		if(searchStartDate.isAfter(resService.getLatestUnacceptDate())) {
-			availableCampsiteIDs = siteService.getCampsiteIDs();
-		}
+
 		return new ArrayList<Integer>(availableCampsiteIDs);
 	}
 	
@@ -115,8 +126,9 @@ public class CampsiteSearchByDateService {
 	 */
 	private void initializeCampsiteIDsByDatesMaps() {
 		// Start from today and add Set of all campsite IDs for each date between now and latest unaccept date
-		LocalDate startDate = LocalDate.parse(startDateStr);
-		List<LocalDate> datesOfInterest = this.getDatesBetweenDates(startDate, resService.getLatestUnacceptDate());
+		this.setStartDate(LocalDate.parse(startDateStr));
+		
+		List<LocalDate> datesOfInterest = this.getDatesBetweenDates(this.getStartDate(), resService.getLatestUnacceptDate());
 		Set<Integer> campsiteIdSet = siteService.getCampsiteIDs();
 		
 		campsitesByUnreservedDate.initialize(datesOfInterest, campsiteIdSet);
@@ -140,6 +152,20 @@ public class CampsiteSearchByDateService {
 		this.gapDays = _gapDays;
 	}
 
+
+	/**
+	 * @return the startDate
+	 */
+	public LocalDate getStartDate() {
+		return this.startDate;
+	}
+
+	/**
+	 * @param _startDate the startDate to set
+	 */
+	public void setStartDate(LocalDate _startDate) {
+		this.startDate = _startDate;
+	}
 
 	/**
 	 * Reserved dates are those dates which are between startDate and endDate (inclusive) of a reservation.

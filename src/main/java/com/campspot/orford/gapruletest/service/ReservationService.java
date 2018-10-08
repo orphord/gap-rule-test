@@ -25,6 +25,7 @@ public class ReservationService {
 	 * @param _inRes
 	 */
 	public void addReservation(Reservation _inRes) {
+		this.updateLatestUnaccept(_inRes.getEndDate());
 		allReservations.add(_inRes);
 	}
 

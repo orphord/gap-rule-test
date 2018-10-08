@@ -18,6 +18,10 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
 
 ---
 
+### Some Assumptions I've made
+* All campsites are available after the latest unacceptable date of the existing reservations.  That is there's no forward looking time limit and a reservation 2 years (or more) in the future would be fine.
+* I created a "start date", where time begins for the context of this application.  My first thought was to use today -- that is the startup date of the application -- but the test data provided had dates in the past, so in the `application.properties` file May 1, 2018 is the start date.
+
 ### A few technical notes
 1. In creating the data structures I decided to allow the Service layer to hold on to the Lists of campsites and reservations instead of making a pseudo-DAO layer which I felt would have made the code more confusing to read without adding any value.
 2. The *gap-rule* logic is in the `CampsitesByDateService.java` file.
@@ -57,9 +61,13 @@ The basic approach to the solution is to map a set of campsites to days which ar
   * The `mungeReservationData()` method creates these three objects getting the existing reservations from the ReservationService and the list of all campsite IDs from the CampsiteService.
     * The architectural decision to create a separate service layer component (`CampsitesSearchByDateService`) was because it really sits between reservations and campsites and I felt it was a good logical component to separate from the data services.
     * Additionally, having a `CampsiteSearchService` that has the `CampsitesSearchByDateService` would make it fairly easy/obvious where to extend search capability to other dimensions.  For example if we needed to search for sites based on the max length of the site or tents only, additional services could be created and held by `CampsiteSearchService`.
+* Here is a [link](https://drive.google.com/file/d/1sQ02mWPst7SBD9OxwxNyUv6INbl9JHAx/view?usp=sharing) to a very basic class diagram of the system.
 
 #### Testing:
-* 
+* I generally subscribe to the testing model of using two types of tests:
+  1. Unit Tests -- Approximately all classes should have some level of test coverage.  Unit tests are to test the basic functionality of a class in isolation.
+  2. Integration Tests -- This is a test (or set of tests) that test the system working as a whole.  In the case of a Spring Boot application, the whole application context needs to be created and wired together for a proper test.
+* In this case, since the implementation is not massive, I've added the word "Integration" to the integration test class.  In a larger module, I might create a JUnit test suite for unit tests and integration tests to compartmentalize them.
 
 #### Observations:
 * A new reservation may start on the day following the existing reservation, but not the day after that day (hence the gap).

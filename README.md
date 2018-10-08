@@ -1,6 +1,6 @@
 # gap-rule-test
 ### Gap rule implementation for campspot hiring process
-An implementation of the "Gap Rule" for Campspot where a new reservation may *not* be made leaving a gap of <gap> days.  In this implementation <gap> is 1 day, but it is implemented as a property in a text file, so this could be changed to *any* gap size with a restart of the system.
+An implementation of the "Gap Rule" for Campspot where a new reservation may *not* be made leaving a gap of *some number* days.  In this implementation the gap is 1 day, but the gap value is implemented as a property in a text file, so this could be changed to *any* gap size with a restart of the system.
 
 ### Install/Build Instructions
 #### Required software
@@ -8,18 +8,18 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
    * Apache Maven v.3.5.2
    * git -- on my system I have version 2.17.1, I would *guess* it works with others, but don't know that as a fact
    
-### Instructions
+### Instructions to install and run
    1. In a terminal window navigate to the directory to which you would like to clone the git repository type `git clone https://github.com/orphord/gap-rule-test.git` (<--or copy-paste this text).
     * This will have created a directory called `gap-rule-test/`, navigate there (ie. `cd gap-rule-test/`) (please forgive that I added "test" at the end of the name, I'm thinking of this as a test, so I named the repo that.
    2. Type `mvn clean install`, the build will start and the set of tests will run, I would expect no failures, **If there is a failure, please call or get in touch, that would be surprising and I may need to check out what's up**.
    3. Type `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar`.  This will run this system with the `test-case.json` provided with the instructions.
-     * Note: I did add the feature to allow a user to specify a json file with the command line parameter --file.loc, so on my system for example I would enter `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar --file.loc=/home/orphord/dir/to/another-file.json` and that file would get picked up and processed.
+    * Note: I did add the feature to allow a user to specify a json file with the command line parameter --file.loc, so on my system for example I would enter `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar --file.loc=/home/orphord/dir/to/another-file.json` and that file would get picked up and processed.
    4. The essential output is to the console as log4j messages.  The important information is between "======================..." and "=================..."
 
 ---
 
 ### Some Assumptions I've made
-* All campsites are available after the latest unacceptable date of the existing reservations.  That is there's no forward looking time limit and a reservation 2 years (or more) in the future would be fine.
+* All campsites are available after the latest unacceptable date of the existing reservations.  That is there's no forward looking time limit and a reservation 2 years (or more) in the future would be fine.  If a search is done with a start date *after* the latest unacceptable date for existing reservations, all sites would be available.
 * I created a "start date", where time begins for the context of this application.  My first thought was to use today -- that is the startup date of the application -- but the test data provided had dates in the past, so in the `application.properties` file May 1, 2018 is the start date.
 
 ### A few technical notes
@@ -50,7 +50,7 @@ The basic approach to the solution is to map a set of campsites to days which ar
 |Day 8|[1,3]|*Site 2 is unavailable due to gap rule*|
 |Day 9+|[1,2,3]|*All sites available day 9 and later*|
 
-* The above is one of the three data structures I used to model availability.  One for acceptable start dates for potential reservations, one for acceptable end dates, and one for reserved dates only to check for the *span* case, see Obervations below.
+* Above is a table representation of the key data structure I used to model availability.  The `CampsiteSearchByDateService` has three; one for acceptable start dates for potential reservations, one for acceptable end dates, and one for reserved dates only to check for the *span* case (see *Obervations* below).
 * The technical details are that each of these is a Map<LocalDate,Set<Campsite>> (encapsulated in the `CampsitesByDate` class) where every day from some start date to the latest unacceptable start date among the existing reservations keys the set of campsites for which that date is acceptable.
   * There are three `CampsitesByDate` objects which are owned by the `CampsitesSearchByDateService` class
     1. `campsitesByUnreservedDate` -- the set of campsites that do *not* have a reservation for the keyed date.
@@ -74,3 +74,7 @@ The basic approach to the solution is to map a set of campsites to days which ar
 * Similarly for end dates except the question is about finishing before the existing reservation.
 * A corner case is where a potential new reservation *spans* (ie. start date is before and end date is after) an existing reservation. In order to handle this case each day within the reservation must be checked.
 
+#### Next Steps:
+* If I were to implement this as a more production-like microservice two key changes would be
+ 1. A RestController to replace the FileDataController -- in this example, the fact that the search and model data were combined into a single file made the idea of a FileDataController of some sort necessary.  I took advantage of this to allow the ability to pass in a data file as a command line parameter, but in a RestController would be the way to go in a production application.
+ 2. A DAO layer -- behind the ReservationService and CampsiteService would be a data access layer which would directly make calls to the appropriate data store(s) to acquire the data as opposed to pulling it from a file.

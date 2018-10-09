@@ -20,12 +20,12 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
 
 ### Some Assumptions I've made
 * All campsites are available after the latest unacceptable date of the existing reservations.  That is there's no forward looking time limit and a reservation 2 years (or more) in the future would be fine.  If a search is done with a start date *after* the latest unacceptable date for existing reservations, all sites would be available.
-* I created a "start date", where time begins for the context of this application.  My first thought was to use today -- that is the startup date of the application -- but the test data provided had dates in the past, so in the `application.properties` file May 1, 2018 is the start date.
+* I created a "start date", where time begins for the context of this application.  My first thought was to use today -- that is the startup date of the application -- but the test data provided had dates in the past, so in the `application.properties` file May 1, 2018 is the start date.  If a search begins before the start date, zero campsites would match.
+* I'm assuming a good/valid JSON file, I definitely am serious about testing input, but felt that in the interest of time/clarity that would be overkill for this exercise.  What I mean by good is that end dates are => start dates, and IDs are integers, etc.
 
 ### A few technical notes
 1. In creating the data structures I decided to allow the Service layer to hold on to the Lists of campsites and reservations instead of making a pseudo-DAO layer which I felt would have made the code more confusing to read without adding any value.
 2. The *gap-rule* logic is in the `CampsitesByDateService.java` file.
-3. I'm assuming a good/valid JSON file, I definitely am serious about testing input, but felt that in the interest of time/clarity that would be overkill for this exercise.
 
 ### Approach
 The basic approach to the solution is to map a set of campsites to days which are acceptable for a potential reservation's start date, end date, or any day of the reservation (ie. is that site already reserved).  An example will help:

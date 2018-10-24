@@ -1,6 +1,6 @@
 # gap-rule-test
-### Gap rule implementation for campspot hiring process
-An implementation of the "Gap Rule" for Campspot where a new reservation may *not* be made leaving a gap of *some number* days.  In this implementation the gap is 1 day, but the gap value is implemented as a property in a text file, so this could be changed to *any* gap size with a restart of the system.
+### Gap rule implementation for a reservation system
+An implementation of the "Gap Rule" for a reservation system where a new reservation may *not* be made leaving a gap of *some number* days.  In this implementation the gap is 1 day, but the gap value is implemented as a property in a text file, so this could be changed to *any* gap size with a restart of the system.
 
 ### Install/Build Instructions
 #### Required software
@@ -10,7 +10,7 @@ An implementation of the "Gap Rule" for Campspot where a new reservation may *no
    
 ### Instructions to install and run
 1. In a terminal window navigate to the directory to which you would like to clone the git repository type `git clone https://github.com/orphord/gap-rule-test.git` (<--or copy-paste this text).
-   * This will have created a directory called gap-rule-test/, navigate there (ie. cd gap-rule-test/) (please forgive that I added "test" at the end of the name, I'm thinking of this as a test, so I named the repo that.
+   * This will have created a directory called gap-rule-test/, navigate there (ie. cd gap-rule-test/)
 2. Type `mvn clean install`, the build will start and the set of tests will run, I would expect no failures, **If there is a failure, please call or get in touch, that would be surprising and I may need to check out what's up**.
 3. Type `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar`.  This will run the process with the `test-case.json` provided with the instructions.
    * Note: I did add the feature to allow a user to specify a json file with the command line parameter --file.loc, so on my system for example I would enter `java -jar target/gap-rule-test-0.0.1-SNAPSHOT.jar --file.loc=/home/orphord/dir/to/another-file.json` and that file would get picked up and processed.

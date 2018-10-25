@@ -11,26 +11,26 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orford.gapruletest.exception.GapRuleException;
-import com.orford.gapruletest.model.Campsite;
-import com.orford.gapruletest.model.CampsiteSearch;
+import com.orford.gapruletest.model.Site;
+import com.orford.gapruletest.model.SiteSearch;
 import com.orford.gapruletest.model.Reservation;
 
 public class JsonNodeToObjectUtil {
 	private static Logger log = LoggerFactory.getLogger(JsonNodeToObjectUtil.class);
 	
-	public List<Campsite> getCampsites(JsonNode _campsiteNode) throws GapRuleException {
-		log.debug("getCampsites from JsonNode called.");
-		List<Campsite> campsites = new ArrayList<Campsite>();
+	public List<Site> getSites(JsonNode _siteNode) throws GapRuleException {
+		log.debug("getSites from JsonNode called.");
+		List<Site> sites = new ArrayList<Site>();
 
 		try {
-			campsites = new ObjectMapper().readerFor(new TypeReference<List<Campsite>>(){}).readValue(_campsiteNode);
+			sites = new ObjectMapper().readerFor(new TypeReference<List<Site>>(){}).readValue(_siteNode);
 		} catch (IOException ex) {
-			String errMsg = "An IOException was thrown attempting to transform Campsite node to Campsite objects.";
+			String errMsg = "An IOException was thrown attempting to transform Site node to Site objects.";
 			log.error(errMsg);
 			throw new GapRuleException(errMsg);
 		}
 
-		return campsites;
+		return sites;
 	}
 
 	public List<Reservation> getReservations(JsonNode _resNode) throws GapRuleException {
@@ -49,14 +49,14 @@ public class JsonNodeToObjectUtil {
 		
 	}
 
-	public CampsiteSearch getCampsiteSearch(JsonNode _searchNode) throws GapRuleException {
-		log.debug("getCampsiteSearch from JsonNode called.");
-		CampsiteSearch searchObj = new CampsiteSearch();
+	public SiteSearch getSiteSearch(JsonNode _searchNode) throws GapRuleException {
+		log.debug("getSiteSearch from JsonNode called.");
+		SiteSearch searchObj = new SiteSearch();
 
 		try {
-			searchObj = new ObjectMapper().treeToValue(_searchNode, CampsiteSearch.class);
+			searchObj = new ObjectMapper().treeToValue(_searchNode, SiteSearch.class);
 		} catch (IOException ex) {
-			String errMsg = "An IOException was thrown attempting to transform Search node to CampsiteSearch object.";
+			String errMsg = "An IOException was thrown attempting to transform Search node to SiteSearch object.";
 			log.error(errMsg);
 			throw new GapRuleException(errMsg);
 		}

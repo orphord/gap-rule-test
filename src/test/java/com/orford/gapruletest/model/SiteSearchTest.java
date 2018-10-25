@@ -8,15 +8,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.orford.gapruletest.model.CampsiteSearch;
+import com.orford.gapruletest.model.SiteSearch;
 
-public class CampsiteSearchTest {
+public class SiteSearchTest {
 
-	private CampsiteSearch search;
+	private SiteSearch search;
 
 	@Before
 	public void setUp() throws Exception {
-		search = new CampsiteSearch();
+		search = new SiteSearch();
 		search.setStartDate(LocalDate.parse("2018-01-20"));
 		search.setEndDate(LocalDate.parse("2018-01-29"));
 	}

@@ -3,16 +3,16 @@ package com.orford.gapruletest.model;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.orford.gapruletest.util.CampsiteSearchDeserializer;
+import com.orford.gapruletest.util.SiteSearchDeserializer;
 
-@JsonDeserialize(using = CampsiteSearchDeserializer.class)
-public class CampsiteSearch {
+@JsonDeserialize(using = SiteSearchDeserializer.class)
+public class SiteSearch {
 	private LocalDate startDate;
 	private LocalDate endDate;
 
-	public CampsiteSearch() {}
+	public SiteSearch() {}
 
-	public CampsiteSearch(LocalDate _startDate, LocalDate _endDate) {
+	public SiteSearch(LocalDate _startDate, LocalDate _endDate) {
 		this.startDate = _startDate;
 		this.endDate = _endDate;
 	}

@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.orford.gapruletest.model.Campsite;
-import com.orford.gapruletest.model.CampsiteSearch;
-import com.orford.gapruletest.service.CampsiteSearchService;
-import com.orford.gapruletest.service.CampsiteService;
+import com.orford.gapruletest.model.Site;
+import com.orford.gapruletest.model.SiteSearch;
+import com.orford.gapruletest.service.SiteSearchService;
+import com.orford.gapruletest.service.SiteService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,9 +29,9 @@ public class GapRuleIntegrationTest {
 	private static final Logger log = LoggerFactory.getLogger(GapRuleIntegrationTest.class);
 
 	@Autowired
-	CampsiteSearchService searchService;
+	SiteSearchService searchService;
 	@Autowired
-	CampsiteService siteService;
+	SiteService siteService;
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,10 +42,10 @@ public class GapRuleIntegrationTest {
 
 	@Test
 	public void testEndDateGapHitsSites2and4() {
-		CampsiteSearch search = new CampsiteSearch();
+		SiteSearch search = new SiteSearch();
 		search.setStartDate(LocalDate.parse("2018-06-04"));
 		search.setEndDate(LocalDate.parse("2018-06-05"));
-		List<Campsite> actualAvailSites = searchService.performSearch(search);
+		List<Site> actualAvailSites = searchService.performSearch(search);
 		List<String> acutalSiteNames = actualAvailSites.stream().map(site -> site.getName()).collect(Collectors.toList());
 
 		assertThat("These should both be there", acutalSiteNames, hasItems("Cozy Cabin", "Cabin in the Woods"));
@@ -55,10 +55,10 @@ public class GapRuleIntegrationTest {
 
 	@Test
 	public void testStartDateAfterLastUnaccept() {
-		CampsiteSearch search = new CampsiteSearch();
+		SiteSearch search = new SiteSearch();
 		search.setStartDate(LocalDate.parse("2018-06-25"));
 		search.setEndDate(LocalDate.parse("2018-06-30"));
-		List<Campsite> actualAvailSites = searchService.performSearch(search);
+		List<Site> actualAvailSites = searchService.performSearch(search);
 		List<String> actualAvailSiteNames = actualAvailSites.stream().map(site -> site.getName()).collect(Collectors.toList());
 
 		assertThat("All sites should be there", actualAvailSiteNames, hasItems("Cozy Cabin", "Comfy Cabin", "Rustic Cabin", "Rickety Cabin", "Cabin in the Woods"));
@@ -67,10 +67,10 @@ public class GapRuleIntegrationTest {
 
 	@Test
 	public void testStartDateGapHitsSites2And3() {
-		CampsiteSearch search = new CampsiteSearch();
+		SiteSearch search = new SiteSearch();
 		search.setStartDate(LocalDate.parse("2018-06-11"));
 		search.setEndDate(LocalDate.parse("2018-06-12"));
-		List<Campsite> actualAvailSites = searchService.performSearch(search);
+		List<Site> actualAvailSites = searchService.performSearch(search);
 		List<String> actualAvailSiteNames = actualAvailSites.stream().map(site -> site.getName()).collect(Collectors.toList());
 
 		assertThat("All sites should be there", actualAvailSiteNames, hasItems("Cozy Cabin","Rickety Cabin", "Cabin in the Woods"));
@@ -80,10 +80,10 @@ public class GapRuleIntegrationTest {
 	
 	@Test
 	public void testSpanSite1Res() {
-		CampsiteSearch search = new CampsiteSearch();
+		SiteSearch search = new SiteSearch();
 		search.setStartDate(LocalDate.parse("2018-06-06"));
 		search.setEndDate(LocalDate.parse("2018-06-13"));
-		List<Campsite> actualAvailSites = searchService.performSearch(search);
+		List<Site> actualAvailSites = searchService.performSearch(search);
 		List<String> actualAvailSiteNames = actualAvailSites.stream().map(site -> site.getName()).collect(Collectors.toList());
 
 		assertThat("All sites should be there", actualAvailSiteNames, hasItems("Cabin in the Woods"));

@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.orford.gapruletest.exception.GapRuleException;
-import com.orford.gapruletest.model.Campsite;
-import com.orford.gapruletest.model.CampsiteSearch;
+import com.orford.gapruletest.model.Site;
+import com.orford.gapruletest.model.SiteSearch;
 import com.orford.gapruletest.model.Reservation;
-import com.orford.gapruletest.service.CampsiteSearchService;
-import com.orford.gapruletest.service.CampsiteService;
+import com.orford.gapruletest.service.SiteSearchService;
+import com.orford.gapruletest.service.SiteService;
 import com.orford.gapruletest.service.ReservationService;
 import com.orford.gapruletest.util.DataObjectsFromFileUtil;
 
@@ -28,32 +28,33 @@ public class GapRuleController {
 	private static Logger log = LoggerFactory.getLogger(GapRuleController.class);
 
 	ReservationService resService;
-	CampsiteService locationService;
-	CampsiteSearchService searchService;
+	SiteService locationService;
+	SiteSearchService searchService;
 
 	@Autowired
-	public GapRuleController(ReservationService _resService, CampsiteService _locService, CampsiteSearchService _searchService) {
+	public GapRuleController(ReservationService _resService, SiteService _locService, SiteSearchService _searchService) {
 		resService = _resService;
 		locationService = _locService;
 		searchService = _searchService;
 		this.loadData(null);
 	}
 
+	/**
+	 * Method to take in a requested reservation start date and end date and return a list of Site objects that pass
+	 * the defined gap-rule criteria (1 day gap by default).
+	 * @param _startDate
+	 * @param _endDate
+	 * @return
+	 */
 	@RequestMapping(value="/search", method=RequestMethod.GET)
-	public List<Campsite> findAvailableLocationsGivenGapRule(@RequestParam(value="startDate") String _startDate,
-																													 @RequestParam(value="endDate") String _endDate) {
+	public List<Site> findAvailableLocationsGivenGapRule(@RequestParam(value="startDate") String _startDate,
+																											 @RequestParam(value="endDate") String _endDate) {
 		LocalDate startDate = LocalDate.parse(_startDate);
 		LocalDate endDate = LocalDate.parse(_endDate);
-		CampsiteSearch searchReq = new CampsiteSearch(startDate, endDate);
-		List<Campsite> resultList = searchService.performSearch(searchReq);
+		SiteSearch searchReq = new SiteSearch(startDate, endDate);
+		List<Site> resultList = searchService.performSearch(searchReq);
 
 		return resultList;
-	}
-
-
-	@RequestMapping(value="/poc", method=RequestMethod.GET)
-	public String pocRequest() {
-		return "ya, it doesthe thing.";
 	}
 
 
@@ -74,12 +75,12 @@ public class GapRuleController {
 			// Acquire data from file and set to appropriate services
 			DataObjectsFromFileUtil dataFromFile = new DataObjectsFromFileUtil();
 			List<Reservation> reservationList = dataFromFile.getReservationListFromFile(_optFilePath);
-			List<Campsite> campsiteList = dataFromFile.getCampsiteListFromFile(_optFilePath);
+			List<Site> siteList = dataFromFile.getSiteListFromFile(_optFilePath);
 
 			resService.setAllReservations(reservationList);
-			locationService.setAllCampsites(campsiteList);
+			locationService.setAllSites(siteList);
 			
-			// Call CampsiteSearchService initialize procedure to process data for search
+			// Call SiteSearchService initialize procedure to process data for search
 			searchService.initialize();
 
 		} catch(GapRuleException ex) {

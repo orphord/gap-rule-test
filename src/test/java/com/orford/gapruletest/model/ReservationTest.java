@@ -16,16 +16,16 @@ public class ReservationTest {
 	@Before
 	public void setUp() throws Exception {
 		testReservation = new Reservation();
-		testReservation.setCampsiteID(new Integer(1));
+		testReservation.setSiteID(new Integer(1));
 		testReservation.setStartDate(LocalDate.parse("2018-06-01"));
 		testReservation.setEndDate(LocalDate.parse("2018-06-07"));
 
 	}
 
 	@Test
-	public void testCampsiteID() {
+	public void testSiteID() {
 		Integer expectedID = new Integer(1);
-		assertEquals(testReservation.getCampsiteID(), expectedID);
+		assertEquals(testReservation.getSiteID(), expectedID);
 	}
 
 	

@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orford.gapruletest.exception.GapRuleException;
-import com.orford.gapruletest.model.Campsite;
-import com.orford.gapruletest.model.CampsiteSearch;
+import com.orford.gapruletest.model.Site;
+import com.orford.gapruletest.model.SiteSearch;
 import com.orford.gapruletest.model.Reservation;
 
 @Component
@@ -26,7 +26,7 @@ public class DataObjectsFromFileUtil {
 	private static Logger log = LoggerFactory.getLogger(DataObjectsFromFileUtil.class);
 	private final static String searchNodeIdentifier = "search";
 	private final static String reservationNodeIdentifier = "reservations";
-	private final static String campsiteNodeIdentifier = "campsites";
+	private final static String siteNodeIdentifier = "campsites";
 
 	@Value("${default.json.file}")
 	private String testJsonFileLoc;
@@ -57,31 +57,31 @@ public class DataObjectsFromFileUtil {
 	 * @return
 	 * @throws GapRuleException
 	 */
-	public List<Campsite> getCampsiteListFromFile(String _fileLoc) throws GapRuleException {
-		List<Campsite> campsiteList = new ArrayList<Campsite>();
+	public List<Site> getSiteListFromFile(String _fileLoc) throws GapRuleException {
+		List<Site> siteList = new ArrayList<Site>();
 		initRootNode(_fileLoc);
 		JsonNodeToObjectUtil jsonObjectUtil = new JsonNodeToObjectUtil();
 
-		JsonNode campsiteNode = rootNode.get(campsiteNodeIdentifier);
-		campsiteList = jsonObjectUtil.getCampsites(campsiteNode);
+		JsonNode siteNode = rootNode.get(siteNodeIdentifier);
+		siteList = jsonObjectUtil.getSites(siteNode);
 
-		return campsiteList;
+		return siteList;
 		
 	}
 	
 
 	/**
-	 * Function will return a CampsiteSearch object
+	 * Function will return a SiteSearch object
 	 * @param _optFilePath
 	 * @return
 	 */
-	public CampsiteSearch getSearchFromFile(String _fileLoc) throws GapRuleException {
-		CampsiteSearch search = new CampsiteSearch();
+	public SiteSearch getSearchFromFile(String _fileLoc) throws GapRuleException {
+		SiteSearch search = new SiteSearch();
 		initRootNode(_fileLoc);
 		JsonNodeToObjectUtil jsonObjectUtil = new JsonNodeToObjectUtil();
 		
 		JsonNode searchNode = rootNode.get(searchNodeIdentifier);
-		search = jsonObjectUtil.getCampsiteSearch(searchNode);
+		search = jsonObjectUtil.getSiteSearch(searchNode);
 		
 		return search;
 	}

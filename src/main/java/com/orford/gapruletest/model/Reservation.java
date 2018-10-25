@@ -9,7 +9,7 @@ import com.orford.gapruletest.util.ReservationDeserializer;
 public class Reservation {
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private Integer campsiteID;
+	private Integer siteID;
 	/**
 	 * @return the startDate
 	 */
@@ -35,16 +35,16 @@ public class Reservation {
 		this.endDate = _endDate;
 	}
 	/**
-	 * @return the campsiteID
+	 * @return the siteID
 	 */
-	public Integer getCampsiteID() {
-		return this.campsiteID;
+	public Integer getSiteID() {
+		return this.siteID;
 	}
 	/**
-	 * @param _campsiteID the campsiteID to set
+	 * @param _siteID the siteID to set
 	 */
-	public void setCampsiteID(Integer _campsiteID) {
-		this.campsiteID = _campsiteID;
+	public void setSiteID(Integer _siteID) {
+		this.siteID = _siteID;
 	}
 	
 	

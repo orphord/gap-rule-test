@@ -9,51 +9,51 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.orford.gapruletest.model.Campsite;
-import com.orford.gapruletest.service.CampsiteService;
+import com.orford.gapruletest.model.Site;
+import com.orford.gapruletest.service.SiteService;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 
-public class CampsiteSearchByDateServiceTest {
-	CampsiteService testService = new CampsiteService();
+public class SearchByDateServiceTest {
+	SiteService testService = new SiteService();
 	
-	List<Campsite> sites = new ArrayList<Campsite>();
+	List<Site> sites = new ArrayList<Site>();
 
 	@Before
 	public void setUp() throws Exception {
-		Campsite site1 = new Campsite();
+		Site site1 = new Site();
 		site1.setId(new Integer(1));
 		site1.setName("Numero Uno");
 		sites.add(site1);
-		Campsite site2 = new Campsite();
+		Site site2 = new Site();
 		site2.setId(new Integer(2));
 		site2.setName("Numero Dos");
 		sites.add(site2);
-		Campsite site3 = new Campsite();
+		Site site3 = new Site();
 		site3.setId(new Integer(3));
 		site3.setName("Numero tres");
 		sites.add(site3);
-		testService.setAllCampsites(sites);
+		testService.setAllSites(sites);
 	}
 
 
 	@Test
 	public void testGetSiteIDs() {
-		Set<Integer> siteIDs = testService.getCampsiteIDs();
+		Set<Integer> siteIDs = testService.getSiteIDs();
 		assertThat(siteIDs, containsInAnyOrder(1,2,3));
 	}
 	
 	
 	@Test
-	public void testGetCampsitesForIDList() {
+	public void testGetSitesForIDList() {
 		List<Integer> siteIDs = new ArrayList<Integer>();
 		siteIDs.add(new Integer(2));
 		siteIDs.add(new Integer(3));
 
-		List<Campsite> sitesForIDs = testService.getCampsiteListFromIDs(siteIDs);
+		List<Site> sitesForIDs = testService.getSiteListFromIDs(siteIDs);
 		assertThat(sitesForIDs.size(), is(equalTo(2)));
 		assertThat(sitesForIDs.get(0).getId(), is(equalTo(2)));
 

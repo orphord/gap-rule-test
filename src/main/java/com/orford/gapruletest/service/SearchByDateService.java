@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.orford.gapruletest.model.CampsiteSearch;
-import com.orford.gapruletest.model.CampsitesByDate;
+import com.orford.gapruletest.model.SiteSearch;
+import com.orford.gapruletest.model.SitesByDate;
 import com.orford.gapruletest.model.Reservation;
 
 @Service
-public class CampsiteSearchByDateService {
-	private static final Logger log = LoggerFactory.getLogger(CampsiteSearchByDateService.class);
+public class SearchByDateService {
+	private static final Logger log = LoggerFactory.getLogger(SearchByDateService.class);
 
 	@Value("${default.start.date.str}")
 	String startDateStr;
@@ -34,18 +34,18 @@ public class CampsiteSearchByDateService {
 	ReservationService resService;
 
 	@Autowired
-	CampsiteService siteService;
+	SiteService siteService;
 
-	CampsitesByDate campsitesByUnreservedDate;
-	CampsitesByDate campsitesByAcceptableStartDate;
-	CampsitesByDate campsitesByAcceptableEndDate;
+	SitesByDate sitesByUnreservedDate;
+	SitesByDate sitesByAcceptableStartDate;
+	SitesByDate sitesByAcceptableEndDate;
 	
 	private final static long DAYS_TO_GAP = 2;
 
-	public CampsiteSearchByDateService() {
-		campsitesByUnreservedDate = new CampsitesByDate();
-		campsitesByAcceptableStartDate = new CampsitesByDate();
-		campsitesByAcceptableEndDate = new CampsitesByDate();
+	public SearchByDateService() {
+		sitesByUnreservedDate = new SitesByDate();
+		sitesByAcceptableStartDate = new SitesByDate();
+		sitesByAcceptableEndDate = new SitesByDate();
 	}
 
 	public void mungeReservationData() {
@@ -58,36 +58,36 @@ public class CampsiteSearchByDateService {
 		resService.setLatestUnacceptDate(resService.findLatestUnacceptDate(gapDays));
 
 		// 2. We have the latest unaccept date, now fill in dates from today in Map
-		this.initializeCampsiteIDsByDatesMaps();
+		this.initializeSiteIDsByDatesMaps();
 
-		// 3. Based on reservations, remove campsite IDs from dates where they are not acceptable
+		// 3. Based on reservations, remove site IDs from dates where they are not acceptable
 		for(Reservation res : reservations) {
 			List<LocalDate> reservedDates = this.findReservedDates(res);
-			campsitesByUnreservedDate.removeCampsiteByDates(res, reservedDates);
+			sitesByUnreservedDate.removeSiteByDates(res, reservedDates);
 
 			List<LocalDate> nonStartDates = this.findNonStartDates(res);
 			nonStartDates.addAll(reservedDates);
-			campsitesByAcceptableStartDate.removeCampsiteByDates(res, nonStartDates);
+			sitesByAcceptableStartDate.removeSiteByDates(res, nonStartDates);
 
 			List<LocalDate> nonEndDates = this.findNonEndDates(res);
 			nonEndDates.addAll(reservedDates);
-			campsitesByAcceptableEndDate.removeCampsiteByDates(res, nonEndDates);
+			sitesByAcceptableEndDate.removeSiteByDates(res, nonEndDates);
 
 		}
 	}
 
 
-	public List<Integer> performSearch(CampsiteSearch _search) {
+	public List<Integer> performSearch(SiteSearch _search) {
 		LocalDate searchStartDate = _search.getStartDate();
 		LocalDate searchEndDate = _search.getEndDate();
 
-		// Handle case where startDate is after latest unaccept date --> all campsites are available
+		// Handle case where startDate is after latest unaccept date --> all sites are available
 		if(searchStartDate.isAfter(resService.getLatestUnacceptDate())) {
-			return new ArrayList<Integer>(siteService.getCampsiteIDs());
+			return new ArrayList<Integer>(siteService.getSiteIDs());
 		}
 		
 		// At this point in the business process do not search past latest unaccept date
-		// If search dates are outside of range of acceptable dates, all campsites are available
+		// If search dates are outside of range of acceptable dates, all sites are available
 		LocalDate latestUnacceptDate = resService.getLatestUnacceptDate();
 		if(searchEndDate.isAfter(latestUnacceptDate)) {
 			searchEndDate = latestUnacceptDate;
@@ -96,44 +96,44 @@ public class CampsiteSearchByDateService {
 		// Get a list of LocalDate objects representing each date between the search start and search end inclusive
 		List<LocalDate> reservationDates = this.getDatesBetweenDates(searchStartDate, searchEndDate);
 
-		// Get set of Integer objects representing campsites that are acceptable start date and enddate
-		Set<Integer> startDateCampsiteIDs = campsitesByAcceptableStartDate.get(searchStartDate);
-		Set<Integer> endDateCampsiteIDs = campsitesByAcceptableEndDate.get(searchEndDate);
+		// Get set of Integer objects representing sites that are acceptable start date and enddate
+		Set<Integer> startDateSiteIDs = sitesByAcceptableStartDate.get(searchStartDate);
+		Set<Integer> endDateSiteIDs = sitesByAcceptableEndDate.get(searchEndDate);
 
 		// Now must be sure that every date within the reservation is checked to be sure search doesn't
 		// overlap existing reservation
-		Set<Integer> unreservedCampsiteIDs = campsitesByUnreservedDate.get(searchStartDate);
+		Set<Integer> unreservedSiteIDs = sitesByUnreservedDate.get(searchStartDate);
 		for(LocalDate date : reservationDates) {
-			Set<Integer> campsitesForThisDate = campsitesByUnreservedDate.get(date);
-			unreservedCampsiteIDs.retainAll(campsitesForThisDate);
+			Set<Integer> sitesForThisDate = sitesByUnreservedDate.get(date);
+			unreservedSiteIDs.retainAll(sitesForThisDate);
 		}
 
-		// Find intersection of those campsites that meet search criteria
+		// Find intersection of those sites that meet search criteria
 		// all sites available on start date (taking gap into account)
 		// all sites available on end date (taking gap into account)
 		// all sites unreserved on each date of reservation
-		Set<Integer> availableCampsiteIDs = new HashSet<Integer>(startDateCampsiteIDs);
-		availableCampsiteIDs.retainAll(endDateCampsiteIDs);
-		availableCampsiteIDs.retainAll(unreservedCampsiteIDs);
+		Set<Integer> availableSiteIDs = new HashSet<Integer>(startDateSiteIDs);
+		availableSiteIDs.retainAll(endDateSiteIDs);
+		availableSiteIDs.retainAll(unreservedSiteIDs);
 
 
-		return new ArrayList<Integer>(availableCampsiteIDs);
+		return new ArrayList<Integer>(availableSiteIDs);
 	}
 	
 	/**
-	 * Method to initialize campsitesIDs by date map.  The idea is to start from today to the latest unaccept date
-	 * and optimistically act as if all campsites are available.  The next step will winnow down the sites available on each date.
+	 * Method to initialize sitesIDs by date map.  The idea is to start from today to the latest unaccept date
+	 * and optimistically act as if all sites are available.  The next step will winnow down the sites available on each date.
 	 */
-	private void initializeCampsiteIDsByDatesMaps() {
-		// Start from today and add Set of all campsite IDs for each date between now and latest unaccept date
+	private void initializeSiteIDsByDatesMaps() {
+		// Start from today and add Set of all site IDs for each date between now and latest unaccept date
 		this.setStartDate(LocalDate.parse(startDateStr));
 		
 		List<LocalDate> datesOfInterest = this.getDatesBetweenDates(this.getStartDate(), resService.getLatestUnacceptDate());
-		Set<Integer> campsiteIdSet = siteService.getCampsiteIDs();
+		Set<Integer> siteIdSet = siteService.getSiteIDs();
 		
-		campsitesByUnreservedDate.initialize(datesOfInterest, campsiteIdSet);
-		campsitesByAcceptableStartDate.initialize(datesOfInterest, campsiteIdSet);
-		campsitesByAcceptableEndDate.initialize(datesOfInterest, campsiteIdSet);
+		sitesByUnreservedDate.initialize(datesOfInterest, siteIdSet);
+		sitesByAcceptableStartDate.initialize(datesOfInterest, siteIdSet);
+		sitesByAcceptableEndDate.initialize(datesOfInterest, siteIdSet);
 
 	}
 

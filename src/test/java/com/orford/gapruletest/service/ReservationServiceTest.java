@@ -28,13 +28,13 @@ public class ReservationServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		log.debug("setup() function called.");
-		testReservation1.setCampsiteID(new Integer(1));
+		testReservation1.setSiteID(new Integer(1));
 		testReservation1.setStartDate(LocalDate.parse("2018-06-01"));
 		testReservation1.setEndDate(LocalDate.parse("2018-06-07"));
-		testReservation2.setCampsiteID(new Integer(1));
+		testReservation2.setSiteID(new Integer(1));
 		testReservation2.setStartDate(LocalDate.parse("2018-06-10"));
 		testReservation2.setEndDate(LocalDate.parse("2018-06-17"));
-		testReservation3.setCampsiteID(new Integer(1));
+		testReservation3.setSiteID(new Integer(1));
 		testReservation3.setStartDate(LocalDate.parse("2018-06-18"));
 		testReservation3.setEndDate(LocalDate.parse("2018-06-20"));
 		testReservations.add(testReservation1);
@@ -59,7 +59,7 @@ public class ReservationServiceTest {
 		List<Reservation> serviceRes = testResSvc.getAllReservations();
 		assertThat(serviceRes.size(), is(equalTo(3)));
 		Reservation anotherRes = new Reservation();
-		anotherRes.setCampsiteID(new Integer(1));
+		anotherRes.setSiteID(new Integer(1));
 		anotherRes.setStartDate(LocalDate.parse("2018-06-21"));
 		anotherRes.setEndDate(LocalDate.parse("2018-06-23"));
 		testResSvc.addReservation(anotherRes);
@@ -73,7 +73,7 @@ public class ReservationServiceTest {
 		testResSvc.setAllReservations(testReservations);
 		assertThat(testResSvc.findLatestUnacceptDate(new Integer(1)), is(equalTo(testReservation3.getEndDate().plusDays(testResSvc.getGapDays() + 1))));
 		Reservation anotherRes = new Reservation();
-		anotherRes.setCampsiteID(new Integer(1));
+		anotherRes.setSiteID(new Integer(1));
 		anotherRes.setStartDate(LocalDate.parse("2018-06-21"));
 		anotherRes.setEndDate(LocalDate.parse("2018-06-23"));
 		testResSvc.addReservation(anotherRes);

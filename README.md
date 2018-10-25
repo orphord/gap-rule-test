@@ -65,8 +65,8 @@ The basic approach to the solution is to map a set of sites to days which are ac
 
 #### Testing:
 * I generally subscribe to the testing model of using two types of tests:
-  1. Unit Tests -- Approximately all classes should have some level of test coverage.  Unit tests are to test the basic functionality of a class in isolation.
-  2. Integration Tests -- This is a test (or set of tests) that test the system working as a whole.  In the case of a Spring Boot application, the whole application context needs to be created and wired together for a proper test.
+  1. *Unit Tests* -- Approximately all classes should have some level of test coverage.  Unit tests are to test the basic functionality of a class in isolation.
+  2. *Integration Tests* -- This is a test (or set of tests) that test the system working as a whole.  In the case of a Spring Boot application, the whole application context needs to be created and wired together for a proper test.
 * In this case, since the implementation is not massive, I've added the word "Integration" to the integration test class.  In a larger module, I might create a JUnit test suite for unit tests and integration tests to compartmentalize them.
 
 #### Observations:

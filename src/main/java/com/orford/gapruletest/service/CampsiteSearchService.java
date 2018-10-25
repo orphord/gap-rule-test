@@ -14,12 +14,17 @@ import com.orford.gapruletest.model.CampsiteSearch;
 public class CampsiteSearchService {
 	private final static Logger log = LoggerFactory.getLogger(CampsiteSearchService.class);
 	
-	@Autowired
 	CampsiteSearchByDateService campsitesByDateService;
-	
-	@Autowired
 	CampsiteService siteService;
 	
+	@Autowired
+	public CampsiteSearchService(CampsiteService _locService, CampsiteSearchByDateService _locByDateService) {
+		campsitesByDateService = _locByDateService;
+		siteService = _locService;
+		initialize();
+	}
+
+
 	public void initialize() {
 		campsitesByDateService.mungeReservationData();
 	}

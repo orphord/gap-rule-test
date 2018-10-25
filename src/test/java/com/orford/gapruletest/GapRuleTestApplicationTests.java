@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.orford.gapruletest.controller.FileDataController;
+import com.orford.gapruletest.controller.GapRuleController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -18,11 +18,11 @@ public class GapRuleTestApplicationTests {
 	private final static Logger log = LoggerFactory.getLogger(GapRuleTestApplicationTests.class);
 
 	@Autowired
-	FileDataController fdController;
+	GapRuleController fdController;
 	
 	@Test
 	public void assertControllerLoads() {
-		log.info("FileDataController is null?: " + (fdController == null));
+		log.info("GapRuleController is null?: " + (fdController == null));
 		assertThat(fdController).isNotNull();
 	}
 

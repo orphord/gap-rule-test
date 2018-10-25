@@ -9,30 +9,42 @@ import com.orford.gapruletest.util.CampsiteSearchDeserializer;
 public class CampsiteSearch {
 	private LocalDate startDate;
 	private LocalDate endDate;
-	/**
-	 * @return the startDate
-	 */
-	public LocalDate getStartDate() {
-		return this.startDate;
+
+	public CampsiteSearch() {}
+
+	public CampsiteSearch(LocalDate _startDate, LocalDate _endDate) {
+		this.startDate = _startDate;
+		this.endDate = _endDate;
 	}
+
+
 	/**
 	 * @param _startDate the startDate to set
 	 */
 	public void setStartDate(LocalDate _startDate) {
 		this.startDate = _startDate;
 	}
-	/**
-	 * @return the endDate
-	 */
-	public LocalDate getEndDate() {
-		return this.endDate;
-	}
+
 	/**
 	 * @param _endDate the endDate to set
 	 */
 	public void setEndDate(LocalDate _endDate) {
 		this.endDate = _endDate;
 	}
-	
-	
+
+	/**
+	 * @return the startDate
+	 */
+	public LocalDate getStartDate() {
+		return this.startDate;
+	}
+
+	/**
+	 * @return the endDate
+	 */
+	public LocalDate getEndDate() {
+		return this.endDate;
+	}
+
+
 }

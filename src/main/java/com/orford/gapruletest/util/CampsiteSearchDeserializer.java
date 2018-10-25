@@ -33,11 +33,8 @@ public class CampsiteSearchDeserializer extends StdDeserializer<CampsiteSearch> 
 		String startDateStr = resNode.get(startDateKey).asText();
 		String endDateStr = resNode. get(endDateKey).asText();
 
-		CampsiteSearch outSearch = new CampsiteSearch();
+		CampsiteSearch outSearch = new CampsiteSearch(LocalDate.parse(startDateStr), LocalDate.parse(endDateStr));
 
-		outSearch.setStartDate(LocalDate.parse(startDateStr));
-		outSearch.setEndDate(LocalDate.parse(endDateStr));
-		
 		return outSearch;
 	}
 
